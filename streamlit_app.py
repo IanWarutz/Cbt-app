@@ -72,7 +72,7 @@ def owner_access():
         st.info("Enter password to access owner tools.")
 
 # Only show owner section if a query param ?owner=1 is present for stealth.
-if st.experimental_get_query_params().get("owner") == ["1"]:
+if st.query_params.get("owner") == ["1"]:
     owner_access()
 
 # --- Public Section: Main App ---
