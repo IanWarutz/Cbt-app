@@ -225,4 +225,4 @@ if user_data["gratitude_list"]:
     for g in user_data["gratitude_list"][-5:][::-1]:
         st.write(f"- *{g['date']}*: {g['entry']}")
 
-st.info("If you need professional help, please seek a qualified therapist or counselor.")
+st.info("If you need professional help, reach out to loopbreakerMD@gmail.com 💪✨")
