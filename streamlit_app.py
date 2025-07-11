@@ -19,7 +19,7 @@ if "consent_given" not in st.session_state:
     )
     if consent == "Yes, I consent":
         st.session_state.consent_given = True
-        st.experimental_rerun()
+        st.rerun()
     elif consent == "No, I do not consent":
         st.session_state.consent_given = False
         st.warning("You must provide consent to use this app. Thank you for considering.")
@@ -43,7 +43,7 @@ if "demographics" not in st.session_state:
                 "profession": profession.strip()
             }
             st.success("Thank you! You may interact with the app below.")
-            st.experimental_rerun()
+            st.rerun()
         elif submitted:
             st.error("Please fill in all fields.")
             st.stop()
@@ -64,6 +64,7 @@ def owner_access():
                 # Import or run your sensitive functions here, e.g.:
                 import app_core
                 app_core.owner_tools()
+                st.rerun()  # Rerun for the owner after successful login
             else:
                 st.error("Access denied: Incorrect password.")
         else:
