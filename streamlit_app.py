@@ -1,18 +1,55 @@
 import streamlit as st
 import os
 
-# --- Demographics Section ---
+# --- Data Privacy Notice and Consent ---
 st.title("CBT Reflective App")
 
-with st.form("demographics_form"):
-    age = st.number_input("Your Age", min_value=10, max_value=120)
-    gender = st.selectbox("Your Gender", ["Male", "Female", "Other", "Prefer not to say"])
-    profession = st.text_input("Your Profession")
-    submitted = st.form_submit_button("Continue")
-    if not submitted:
+st.info(
+    "🔒 **Data Collection & Privacy Notice**\n\n"
+    "To improve wellbeing insights, we collect basic demographic information (age, gender, profession) along with your reflections. "
+    "Your data will be kept confidential and securely stored. By continuing, you consent to this data collection. "
+    "If you do not consent, you will not be able to use the app."
+)
+
+if "consent_given" not in st.session_state:
+    consent = st.radio(
+        "Do you consent to the collection and safe storage of your demographic and reflection data?",
+        ["Yes, I consent", "No, I do not consent"],
+        index=None
+    )
+    if consent == "Yes, I consent":
+        st.session_state.consent_given = True
+        st.experimental_rerun()
+    elif consent == "No, I do not consent":
+        st.session_state.consent_given = False
+        st.warning("You must provide consent to use this app. Thank you for considering.")
+        st.stop()
+else:
+    if not st.session_state.consent_given:
+        st.warning("You must provide consent to use this app. Thank you for considering.")
         st.stop()
 
-st.success("Thank you! You may interact with the app below.")
+# --- Demographics Section ---
+if "demographics" not in st.session_state:
+    with st.form("demographics_form"):
+        age = st.number_input("Your Age", min_value=10, max_value=120)
+        gender = st.selectbox("Your Gender", ["Male", "Female", "Other", "Prefer not to say"])
+        profession = st.text_input("Your Profession")
+        submitted = st.form_submit_button("Continue")
+        if submitted and profession.strip() != "":
+            st.session_state.demographics = {
+                "age": int(age),
+                "gender": gender,
+                "profession": profession.strip()
+            }
+            st.success("Thank you! You may interact with the app below.")
+            st.experimental_rerun()
+        elif submitted:
+            st.error("Please fill in all fields.")
+            st.stop()
+
+if "demographics" not in st.session_state:
+    st.stop()
 
 # --- Owner-only: Secure Code Section ---
 def owner_access():
@@ -40,7 +77,10 @@ if st.experimental_get_query_params().get("owner") == ["1"]:
 
 # --- Public Section: Main App ---
 st.header("CBT Reflection Journal")
-st.write("Interact with the public CBT features below:")
+st.write(
+    f"Welcome, {st.session_state.demographics['profession']}! "
+    "Interact with the public CBT features below:"
+)
 # Place your regular app functions here, e.g.:
 # analyze_thought(), gratitude_journal(), etc.
 
