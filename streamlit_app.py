@@ -167,6 +167,15 @@ st.info(f"🔥 Daily Streak: {user_data['streak']} day(s) in a row! Keep it goin
 st.subheader("CBT Thought Analyzer")
 thought = st.text_area("Enter a negative or distressing thought you're experiencing:")
 
+# >>>>>>>> NEW PROMPTS ADDED HERE <<<<<<<<
+if thought.strip():
+    st.text_area("Why are you experiencing those thoughts?", key="why_experiencing")
+    stressors = st.multiselect(
+        "Are there any social stressors contributing to these thoughts?",
+        ["School", "Family", "Work", "Relationships", "Finances", "Health", "Other"]
+    )
+    sought_help = st.radio("Have you sought personal help before?", ["Yes", "No"], index=None)
+
 def streamlit_analyze_thought(thought):
     detected = []
     for key in distortions:
